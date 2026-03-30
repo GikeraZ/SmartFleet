@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: smartfleet-backend
+    env: node
+    region: oregon
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DB_HOST
+        value: ${MYSQL_HOST}
+      - key: DB_USER
+        value: ${MYSQL_USER}
+      - key: DB_PASSWORD
+        value: ${MYSQL_PASSWORD}
+      - key: DB_NAME
+        value: ${MYSQL_DATABASE}
+      - key: JWT_SECRET
+        value: ${JWT_SECRET}
+    autoDeploy: true
+    repo: https://github.com/GikeraZ/SmartFleet
+
+  - type: web
+    name: smartfleet-frontend
+    env: static
+    region: oregon
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishDirectory: frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://smartfleet-backend.onrender.com
+    autoDeploy: true
+    repo: https://github.com/GikeraZ/SmartFleet
