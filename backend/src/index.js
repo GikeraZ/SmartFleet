@@ -3,6 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
+const path = require('path');
 require('dotenv').config();
 
 const db = require('./config/database');
@@ -62,6 +63,13 @@ app.use('/api/mechanic-services', mechanicServiceRoutes);
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'SmartFleet Pro API is running' });
 });
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../frontend/dist')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+  });
+}
 
 app.use(errorHandler);
 
